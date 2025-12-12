@@ -25,7 +25,12 @@ export const HomePageSelectors = {
      * - Direct href match for /contact
      * - Trigger attribute for CTA tracking
      */
-    CONTACT_BUTTON: 'a[href="/contact"], a[trigger="contact_cta"]',
+    // CONTACT_BUTTON: 'a[href="/contact"], a[trigger="contact_cta"]',
+    CONTACT_BUTTON: {
+        role: 'link' as const,
+        name: 'Contact',
+        exact: true
+    },
 
     /**
      * Selector for the main navigation menu container.

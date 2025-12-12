@@ -132,7 +132,10 @@ export default defineConfig({
      */
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      use: {
+        ...devices['Pixel 5'],
+        headless: false
+      },
     },
 
     /**
@@ -156,6 +159,7 @@ export default defineConfig({
         deviceScaleFactor: 3,
         isMobile: true,
         hasTouch: true,
+        headless: false
       },
     },
 

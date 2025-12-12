@@ -54,7 +54,7 @@ test.describe('Smoke Tests', () => {
         });
 
         // Wait a bit to capture any console errors that might occur
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(3000);
         expect(consoleErrors).toEqual([]);
     });
 
@@ -137,8 +137,13 @@ test.describe('Smoke Tests', () => {
      */
     test('should display key elements on mobile', async ({ isMobile }) => {
         if (isMobile) {
+            // Validation 1: Logo visible
             const isLogoVisible = await homePage.isLogoVisible();
             expect(isLogoVisible, 'Logo should still be visible on mobile').toBeTruthy();
+
+            // Validation 2: CTA visible
+            const isCtaVisible = await homePage.isContactButtonVisible();
+            expect(isCtaVisible, 'Contact button (CTA) should still be visible on mobile').toBeTruthy();
         }
     });
 });

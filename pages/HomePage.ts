@@ -60,7 +60,14 @@ export class HomePage extends BasePage {
         this.header = new Header(page);
 
         this.logo = page.locator(HomePageSelectors.LOGO);
-        this.contactButton = page.locator(HomePageSelectors.CONTACT_BUTTON).first();
+        //this.contactButton = page.locator(HomePageSelectors.CONTACT_BUTTON).first();
+        this.contactButton = page.getByRole(
+            HomePageSelectors.CONTACT_BUTTON.role,
+            {
+                name: HomePageSelectors.CONTACT_BUTTON.name,
+                exact: HomePageSelectors.CONTACT_BUTTON.exact
+            }
+        );
         this.navigationMenu = page.locator(HomePageSelectors.NAVIGATION_MENU);
         this.clients = page.locator(HomePageSelectors.CLIENTS);
         this.successStories = page.locator(HomePageSelectors.SUCCESS_STORIES);
