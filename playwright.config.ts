@@ -102,7 +102,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        headless: false,
+        headless: true,
         viewport: null,
         deviceScaleFactor: undefined,
         launchOptions: {
@@ -159,7 +159,7 @@ export default defineConfig({
         deviceScaleFactor: 3,
         isMobile: true,
         hasTouch: true,
-        headless: false
+        headless: true
       },
     },
 
