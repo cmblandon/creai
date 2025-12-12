@@ -132,10 +132,13 @@ test.describe('Smoke Tests', () => {
      * 
      * Validation:
      * - Logo should remain visible on mobile viewports
+     * - Contact button (CTA) should be visible
+     * - Menu button should be visible (instead of full navigation menu)
+     * - Navigation via mobile menu works correctly
      * 
      * Note: This test only runs when isMobile is true (mobile projects).
      */
-    test('should display key elements on mobile', async ({ isMobile }) => {
+    test('should display key elements on mobile', async ({ isMobile, page }) => {
         if (isMobile) {
             // Validation 1: Logo visible
             const isLogoVisible = await homePage.isLogoVisible();
@@ -144,6 +147,15 @@ test.describe('Smoke Tests', () => {
             // Validation 2: CTA visible
             const isCtaVisible = await homePage.isContactButtonVisible();
             expect(isCtaVisible, 'Contact button (CTA) should still be visible on mobile').toBeTruthy();
+
+            // Validation 3: Menu button visible
+            const isMenuButtonVisible = await homePage.isMenuButtonVisible();
+            expect(isMenuButtonVisible, 'Menu button should still be visible on mobile').toBeTruthy();
+
+            // Navigate to Success stories
+            await homePage.header.clickMenuItem('Success stories');
+            await page.waitForURL('**/success-stories**');
+            expect(page.url()).toContain('success-stories');
         }
     });
 });

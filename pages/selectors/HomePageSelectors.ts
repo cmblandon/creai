@@ -67,4 +67,14 @@ export const HomePageSelectors = {
      * Targets the knowledge hub container element.
      */
     KNOWLEDGE_HUB: 'a[href="/knowledge-hub"]',
+
+    /**
+     * Selector for the menu button.
+     * Targets the menu button element.
+     */
+    MENU_BUTTON: {
+        role: 'button' as const,
+        name: 'menu',
+        exact: true
+    },
 } as const;

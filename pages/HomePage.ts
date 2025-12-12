@@ -43,6 +43,9 @@ export class HomePage extends BasePage {
     /** Contact button (CTA) locator */
     readonly contactButton: Locator;
 
+    /** Menu button locator */
+    readonly menuButton: Locator;
+
 
     /**
      * Creates an instance of HomePage.
@@ -73,6 +76,14 @@ export class HomePage extends BasePage {
         this.successStories = page.locator(HomePageSelectors.SUCCESS_STORIES);
         this.aboutUs = page.locator(HomePageSelectors.ABOUT_US);
         this.knowledgeHub = page.locator(HomePageSelectors.KNOWLEDGE_HUB);
+
+        this.menuButton = page.getByRole(
+            HomePageSelectors.MENU_BUTTON.role,
+            {
+                name: HomePageSelectors.MENU_BUTTON.name,
+                exact: HomePageSelectors.MENU_BUTTON.exact
+            }
+        );
     }
 
     /**
@@ -171,6 +182,22 @@ export class HomePage extends BasePage {
      */
     async isAboutUsVisible(): Promise<boolean> {
         return await this.aboutUs.first().isVisible();
+    }
+
+    /**
+     * Checks if the menu button is visible on the page.
+     * 
+     * @async
+     * @returns {Promise<boolean>} True if menu button is visible, false otherwise
+     * 
+     * @example
+     * const isVisible = await homePage.isMenuButtonVisible();
+     * expect(isVisible).toBeTruthy();
+     */
+    async isMenuButtonVisible(): Promise<boolean> {
+        await this.menuButton.isVisible();
+        await this.menuButton.click();
+        return await this.menuButton.isVisible();
     }
 
 }
