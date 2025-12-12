@@ -25,9 +25,6 @@ export class HomePage extends BasePage {
     /** Logo element locator */
     readonly logo: Locator;
 
-    /** Contact button (CTA) locator */
-    readonly contactButton: Locator;
-
     /** Navigation menu locator */
     readonly navigationMenu: Locator;
 
@@ -36,6 +33,16 @@ export class HomePage extends BasePage {
 
     /** Success stories section locator */
     readonly successStories: Locator;
+
+    /** About us section locator */
+    readonly aboutUs: Locator;
+
+    /** Knowledge hub section locator */
+    readonly knowledgeHub: Locator;
+
+    /** Contact button (CTA) locator */
+    readonly contactButton: Locator;
+
 
     /**
      * Creates an instance of HomePage.
@@ -57,6 +64,8 @@ export class HomePage extends BasePage {
         this.navigationMenu = page.locator(HomePageSelectors.NAVIGATION_MENU);
         this.clients = page.locator(HomePageSelectors.CLIENTS);
         this.successStories = page.locator(HomePageSelectors.SUCCESS_STORIES);
+        this.aboutUs = page.locator(HomePageSelectors.ABOUT_US);
+        this.knowledgeHub = page.locator(HomePageSelectors.KNOWLEDGE_HUB);
     }
 
     /**
@@ -128,4 +137,33 @@ export class HomePage extends BasePage {
     async isSuccessStoriesVisible(): Promise<boolean> {
         return await this.successStories.first().isVisible();
     }
+
+    /**
+     * Checks if the knowledge hub section is visible on the page.
+     * 
+     * @async
+     * @returns {Promise<boolean>} True if knowledge hub section is visible, false otherwise
+     * 
+     * @example
+     * const isVisible = await homePage.isKnowledgeHubVisible();
+     * expect(isVisible).toBeTruthy();
+     */
+    async isKnowledgeHubVisible(): Promise<boolean> {
+        return await this.knowledgeHub.first().isVisible();
+    }
+
+    /**
+     * Checks if the about us section is visible on the page.
+     * 
+     * @async
+     * @returns {Promise<boolean>} True if about us section is visible, false otherwise
+     * 
+     * @example
+     * const isVisible = await homePage.isAboutUsVisible();
+     * expect(isVisible).toBeTruthy();
+     */
+    async isAboutUsVisible(): Promise<boolean> {
+        return await this.aboutUs.first().isVisible();
+    }
+
 }

@@ -50,4 +50,16 @@ export const HomePageSelectors = {
      * Targets the CookieBot "Accept All" button by its specific ID.
      */
     COOKIE_ACCEPT_BUTTON: '#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll',
+
+    /**
+     * Selector for the about us section.
+     * Targets the about us container element.
+     */
+    ABOUT_US: 'a[href="/about-us"]',
+
+    /**
+     * Selector for the knowledge hub section.
+     * Targets the knowledge hub container element.
+     */
+    KNOWLEDGE_HUB: 'a[href="/knowledge-hub"]',
 } as const;

@@ -90,6 +90,12 @@ test.describe('Smoke Tests', () => {
 
         const isSuccessStoriesVisible = await homePage.isSuccessStoriesVisible();
         expect(isSuccessStoriesVisible, 'Success stories should be visible').toBeTruthy();
+
+        const isAboutUsVisible = await homePage.isAboutUsVisible();
+        expect(isAboutUsVisible, 'About us should be visible').toBeTruthy();
+
+        const isKnowledgeHubVisible = await homePage.isKnowledgeHubVisible();
+        expect(isKnowledgeHubVisible, 'Knowledge hub should be visible').toBeTruthy();
     });
 
     /**
