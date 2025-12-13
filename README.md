@@ -69,7 +69,10 @@ prueba-tecnica-creai/
 │   └── HomePage.ts                # Page Object de la página principal
 ├── tests/
 │   └── specs/
-│       └── smoke.spec.ts          # Suite de pruebas smoke
+│       └── smoke/
+│           ├── smoke.common.spec.ts   # Tests compartidos
+│           ├── smoke.desktop.spec.ts  # Tests desktop
+│           └── smoke.mobile.spec.ts   # Tests mobile
 ├── .github/
 │   └── workflows/
 │       └── playwright.yml         # Pipeline CI/CD
@@ -102,7 +105,7 @@ npx playwright test --project="iPhone 14"
 ### Ejecutar una prueba específica
 
 ```bash
-npx playwright test tests/specs/smoke.spec.ts
+npx playwright test tests/specs/smoke
 ```
 
 ### Ejecutar con filtro por nombre
@@ -213,7 +216,7 @@ test('ejemplo de navegación', async ({ page }) => {
 
 ## 📝 Pruebas Implementadas
 
-### Smoke Tests (`smoke.spec.ts`)
+### Smoke Tests Suite (`tests/specs/smoke/`)
 
 | Test | Descripción | Validaciones |
 |------|-------------|--------------|
