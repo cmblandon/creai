@@ -58,14 +58,25 @@ export class Header {
      * await header.clickMenuItem(0); // Clicks first menu item
      */
     async clickMenuItem(nameOrIndex: string | number): Promise<void> {
+        // Handle Mobile Menu: Check if hamburger button is visible
+        // We use a short timeout because we expect the button to be there instantly if on mobile
+        const menuButton = this.page.getByRole('button', { name: 'menu', exact: false });
+        if (await menuButton.isVisible()) {
+            await menuButton.click();
+        }
+
         if (typeof nameOrIndex === 'number') {
             // Click by index position
             await this.menuItems.nth(nameOrIndex).click();
         } else {
             // Click by text content, scoped to navigation to avoid footer/body links
+            // Start with a broader search, then restrict if necessary or take the first visible one
             const menuItem = this.page
-                .getByRole('navigation')
-                .getByRole('link', { name: nameOrIndex, exact: false });
+                .getByRole('link', { name: nameOrIndex, exact: false })
+                .first();
+
+            // Ensure menu is open and item is visible before clicking
+            await menuItem.waitFor({ state: 'visible' });
             await menuItem.click();
         }
     }

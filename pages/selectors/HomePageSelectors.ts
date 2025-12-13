@@ -75,6 +75,6 @@ export const HomePageSelectors = {
     MENU_BUTTON: {
         role: 'button' as const,
         name: 'menu',
-        exact: true
+        exact: false
     },
 } as const;

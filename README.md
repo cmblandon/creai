@@ -28,6 +28,8 @@ Proyecto de automatización de pruebas E2E para el sitio web [creai.mx](https://
 - ✅ **CI/CD Ready**: Integración con GitHub Actions
 - ✅ **Reportes HTML**: Reportes detallados de ejecución
 - ✅ **Selectores Semánticos**: Uso de `getByRole` para accesibilidad
+- ✅ **Web-First Assertions**: Validaciones robustas con auto-retry (`toBeVisible`)
+- ✅ **Cross-Platform Strategy**: Tests segregados por `@desktop` y `@mobile`
 
 ## 📦 Requisitos Previos
 
@@ -107,6 +109,16 @@ npx playwright test tests/specs/smoke.spec.ts
 
 ```bash
 npx playwright test --grep "should navigate correctly"
+```
+
+### Ejecutar por Tags (Desktop/Mobile)
+
+```bash
+# Ejecutar solo pruebas desktop
+npx playwright test --grep "@desktop"
+
+# Ejecutar solo pruebas mobile
+npx playwright test --grep "@mobile"
 ```
 
 ### Ver reporte HTML
@@ -205,10 +217,11 @@ test('ejemplo de navegación', async ({ page }) => {
 
 | Test | Descripción | Validaciones |
 |------|-------------|--------------|
-| **should load the page successfully** | Verifica carga correcta de la página | ✓ URL contiene 'creai.mx'<br>✓ Sin errores de consola |
-| **should display key elements** | Valida elementos clave visibles | ✓ Logo visible<br>✓ Botón CTA visible<br>✓ Menú de navegación visible<br>✓ Sección de clientes visible<br>✓ Success stories visible |
-| **should navigate correctly via menu** | Prueba navegación por menú | ✓ Click en "Success stories"<br>✓ URL cambia correctamente |
-| **should display key elements on mobile** | Valida elementos en mobile | ✓ Logo visible en mobile |
+| Test Suite | Tags | Descripción | Validaciones |
+|------------|------|-------------|--------------|
+| **Common Checks** | N/A | Validaciones universales | ✓ URL correcta<br>✓ Sin errores de consola (Network Idle/DOMContentLoaded) |
+| **Desktop Experience** | `@desktop` | Validaciones exclusivas desktop | ✓ Menú completo visible<br>✓ Secciones clave (Logo, CTA, Hub)<br>✓ Navegación estándar |
+| **Mobile Experience** | `@mobile` | Validaciones exclusivas mobile | ✓ Menú hamburguesa visible<br>✓ Logo & CTA responsivos<br>✓ Apertura/Interacción menú lateral |
 
 ## 🔄 CI/CD
 

@@ -103,11 +103,12 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         headless: true,
-        viewport: null,
+        // viewport: { width: 1920, height: 1080 },
         deviceScaleFactor: undefined,
         launchOptions: {
           args: ['--start-maximized']
         },
+        isMobile: false,
       },
     },
 
@@ -134,7 +135,8 @@ export default defineConfig({
       name: 'Mobile Chrome',
       use: {
         ...devices['Pixel 5'],
-        headless: false
+        headless: false,
+        isMobile: true,
       },
     },
 

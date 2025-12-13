@@ -196,8 +196,6 @@ export class HomePage extends BasePage {
      */
     async isMenuButtonVisible(): Promise<boolean> {
         await this.menuButton.isVisible();
-        await this.menuButton.click();
         return await this.menuButton.isVisible();
     }
-
 }

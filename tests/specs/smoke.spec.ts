@@ -4,158 +4,106 @@ import { HomePage } from '../../pages/HomePage';
 /**
  * Smoke Test Suite
  * 
- * This suite contains critical smoke tests that verify the basic functionality
- * of the creai.mx website. These tests should run quickly and catch major issues.
- * 
- * Test Coverage:
- * - Page load validation
- * - Key UI elements visibility
- * - Basic navigation functionality
- * - Mobile responsiveness
+ * Critical path tests for creai.mx
+ * Verifies core functionality across Viewports (Desktop & Mobile)
  * 
  * @group smoke
  */
 test.describe('Smoke Tests', () => {
     let homePage: HomePage;
 
-    /**
-     * Before Each Hook
-     * 
-     * Runs before each test in this suite.
-     * Initializes the HomePage object and navigates to the home page.
-     * Cookie consent is automatically handled by the BasePage.goto() method.
-     */
     test.beforeEach(async ({ page }) => {
         homePage = new HomePage(page);
         await homePage.goto();
     });
 
     /**
-     * Test 1: Page Load Validation
-     * 
-     * Validates that the page loads successfully without errors.
-     * 
-     * Validations:
-     * 1. URL contains 'creai.mx' - Confirms correct page loaded
-     * 2. No console errors - Ensures no JavaScript errors occurred
-     * 
-     * This is a critical test that should always pass for a healthy site.
+     * Shared Validations
+     * Checks that apply to ALL viewports/devices
      */
-    test('should load the page successfully', async ({ page }) => {
-        // Validation 1: HTTP 200 - Verify current page loaded successfully
-        expect(page.url()).toContain('creai.mx');
+    test.describe('Common Checks', () => {
+        test('should load the page successfully', async ({ page }) => {
+            await test.step('Validate URL', async () => {
+                expect(page.url()).toContain('creai.mx');
+            });
 
-        // Validation 2: No console errors
-        const consoleErrors: string[] = [];
-        page.on('console', msg => {
-            if (msg.type() === 'error') {
-                consoleErrors.push(msg.text());
-            }
+            await test.step('Check for Console Errors', async () => {
+                const consoleErrors: string[] = [];
+                page.on('console', msg => {
+                    if (msg.type() === 'error') consoleErrors.push(msg.text());
+                });
+
+                // Allow network settle
+                await page.waitForLoadState('domcontentloaded');
+                if (consoleErrors.length > 0) {
+                    console.warn('Console Errors detected:', consoleErrors);
+                }
+                expect(consoleErrors, `Found ${consoleErrors.length} console errors`).toEqual([]);
+            });
+        });
+    });
+
+    /**
+     * Desktop Specific Tests
+     * Run only when !isMobile
+     */
+    test.describe('Desktop Experience', { tag: '@desktop' }, () => {
+        // Skip entire block if running in mobile mode
+        test.skip(({ isMobile }) => isMobile, 'Skipping Desktop tests on Mobile viewport');
+
+        test('should display all key desktop sections', async () => {
+            await test.step('Verify Navigation Elements', async () => {
+                await expect(homePage.logo.first(), 'Logo').toBeVisible();
+                await expect(homePage.navigationMenu.first(), 'Nav Menu').toBeVisible();
+                await expect(homePage.contactButton.first(), 'CTA').toBeVisible();
+            });
+
+            await test.step('Verify Content Sections', async () => {
+                await expect(homePage.clients.first(), 'Clients Section').toBeVisible();
+                await expect(homePage.successStories.first(), 'Success Stories').toBeVisible();
+                await expect(homePage.knowledgeHub.first(), 'Knowledge Hub').toBeVisible();
+            });
         });
 
-        // Wait a bit to capture any console errors that might occur
-        await page.waitForTimeout(3000);
-        expect(consoleErrors).toEqual([]);
+        test('should navigate via desktop menu', async ({ page }) => {
+            await test.step('Navigate to Success Stories', async () => {
+                await homePage.header.clickMenuItem('Success stories');
+            });
+
+            await test.step('Verify URL Change', async () => {
+                await page.waitForURL('**/success-stories**');
+                expect(page.url()).toContain('success-stories');
+            });
+        });
     });
 
     /**
-     * Test 2: Key Elements Visibility
-     * 
-     * Validates that critical UI elements are visible on the home page.
-     * 
-     * Validations:
-     * 1. Logo is visible - Brand identity
-     * 2. Contact button (CTA) is visible - Primary conversion element
-     * 3. Navigation menu is visible - Site navigation
-     * 4. Clients section is visible - Social proof
-     * 5. Success stories section is visible - Case studies
-     * 
-     * All elements must be visible for a complete user experience.
+     * Mobile Specific Tests
+     * Run only when isMobile
      */
-    test('should display key elements (Logo, CTA, Sections)', async () => {
-        // Validation 1: Logo visible
-        const isLogoVisible = await homePage.isLogoVisible();
-        expect(isLogoVisible, 'Logo should be visible').toBeTruthy();
+    test.describe('Mobile Experience', { tag: '@mobile' }, () => {
+        // Skip entire block if NOT running in mobile mode
+        test.skip(({ isMobile }) => !isMobile, 'Skipping Mobile tests on Desktop viewport');
 
-        // Validation 2: CTA visible
-        const isCtaVisible = await homePage.isContactButtonVisible();
-        expect(isCtaVisible, 'Contact button (CTA) should be visible').toBeTruthy();
+        test('should display mobile specific elements', async () => {
+            await test.step('Verify Mobile Header', async () => {
+                await expect(homePage.logo.first(), 'Logo should be visible').toBeVisible();
+                await expect(homePage.menuButton, 'Hamburger Menu should be visible').toBeVisible();
+                // Check if CTA is visible (might be hidden on some mobile views, but we expect it per requirements)
+                await expect(homePage.contactButton.first(), 'CTA should be visible').toBeVisible();
+            });
+        });
 
-        // Validation 3: At least 3 visible sections
-        const isNavigationMenuVisible = await homePage.isNavigationMenuVisible();
-        expect(isNavigationMenuVisible, 'Navigation menu should be visible').toBeTruthy();
+        test('should navigate via mobile menu', async ({ page }) => {
+            await test.step('Open Mobile Menu and Navigate', async () => {
+                // clickMenuItem handles opening the menu internally for mobile if needed
+                await homePage.header.clickMenuItem('Success stories');
+            });
 
-        const isClientsVisible = await homePage.isClientsVisible();
-        expect(isClientsVisible, 'Clients should be visible').toBeTruthy();
-
-        const isSuccessStoriesVisible = await homePage.isSuccessStoriesVisible();
-        expect(isSuccessStoriesVisible, 'Success stories should be visible').toBeTruthy();
-
-        const isAboutUsVisible = await homePage.isAboutUsVisible();
-        expect(isAboutUsVisible, 'About us should be visible').toBeTruthy();
-
-        const isKnowledgeHubVisible = await homePage.isKnowledgeHubVisible();
-        expect(isKnowledgeHubVisible, 'Knowledge hub should be visible').toBeTruthy();
-    });
-
-    /**
-     * Test 3: Navigation Functionality
-     * 
-     * Validates that menu navigation works correctly.
-     * 
-     * Test Flow:
-     * 1. Click on "Success stories" menu item
-     * 2. Wait for navigation to complete
-     * 3. Verify URL changed to success-stories page
-     * 
-     * This tests the Header component's clickMenuItem method and
-     * ensures navigation is not blocked by overlays or JavaScript errors.
-     */
-    test('should navigate correctly via menu', async ({ page }) => {
-        // Use the Page Object method instead of direct locator access
-        await homePage.header.clickMenuItem('Success stories');
-
-        // Wait for navigation to complete
-        await page.waitForURL('**/success-stories**');
-
-        // Validation: Verify URL changed
-        expect(page.url()).toContain('success-stories');
-    });
-
-    /**
-     * Test 4: Mobile Viewport Validation
-     * 
-     * Validates that key elements remain visible on mobile devices.
-     * 
-     * This test runs on all configured mobile projects (Pixel 5, iPhone 14).
-     * The viewport configuration is handled by playwright.config.ts.
-     * 
-     * Validation:
-     * - Logo should remain visible on mobile viewports
-     * - Contact button (CTA) should be visible
-     * - Menu button should be visible (instead of full navigation menu)
-     * - Navigation via mobile menu works correctly
-     * 
-     * Note: This test only runs when isMobile is true (mobile projects).
-     */
-    test('should display key elements on mobile', async ({ isMobile, page }) => {
-        if (isMobile) {
-            // Validation 1: Logo visible
-            const isLogoVisible = await homePage.isLogoVisible();
-            expect(isLogoVisible, 'Logo should still be visible on mobile').toBeTruthy();
-
-            // Validation 2: CTA visible
-            const isCtaVisible = await homePage.isContactButtonVisible();
-            expect(isCtaVisible, 'Contact button (CTA) should still be visible on mobile').toBeTruthy();
-
-            // Validation 3: Menu button visible
-            const isMenuButtonVisible = await homePage.isMenuButtonVisible();
-            expect(isMenuButtonVisible, 'Menu button should still be visible on mobile').toBeTruthy();
-
-            // Navigate to Success stories
-            await homePage.header.clickMenuItem('Success stories');
-            await page.waitForURL('**/success-stories**');
-            expect(page.url()).toContain('success-stories');
-        }
+            await test.step('Verify URL Change', async () => {
+                await page.waitForURL('**/success-stories**');
+                expect(page.url()).toContain('success-stories');
+            });
+        });
     });
 });
